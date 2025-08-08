@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Datas de Boletos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      margin-top: 60px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #34495e;
+    }
+
+    input[type="date"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    h3 {
+      margin-top: 30px;
+      color: #2c3e50;
+    }
+
+    ul {
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    li {
+      margin-bottom: 8px;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Calculadora de Datas de Boletos</h2>
+
+    <label for="dataInicial">Data Inicial:</label>
+    <input type="date" id="dataInicial">
+
+    <label for="prazo">Prazo(s) após os 30 dias (ex: 30/45/60):</label>
+    <input type="text" id="prazo" placeholder="Digite os prazos separados por /">
+
+    <button onclick="calcularDatas()">Calcular Datas</button>
+
+    <h3>Resultado:</h3>
+    <ul id="resultado"></ul>
+  </div>
+
+  <script>
+    function calcularDatas() {
+      const dataInicial = document.getElementById("dataInicial").value;
+      const prazos = document.getElementById("prazo").value;
+      const resultado = document.getElementById("resultado");
+      resultado.innerHTML = "";
+
+      if (!dataInicial || !prazos) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      const dataBase = new Date(dataInicial);
+      dataBase.setDate(dataBase.getDate() + 30); // Soma 30 dias à data inicial
+
+      const prazosArray = prazos.split('/').map(p => parseInt(p.trim()));
+
+      prazosArray.forEach(dias => {
+        if (!isNaN(dias)) {
+          const novaData = new Date(dataBase);
+          novaData.setDate(novaData.getDate() + (dias - 29)); // Soma diferença após os 30 dias
+
+          const dia = String(novaData.getDate()).padStart(2, '0');
+          const mes = String(novaData.getMonth() + 1).padStart(2, '0');
+          const ano = novaData.getFullYear();
+
+          const dataFormatada = `${dia}/${mes}/${ano}`;
+
+          const item = document.createElement("li");
+          item.textContent = `${dias} dias após a data inicial: ${dataFormatada}`;
+          resultado.appendChild(item);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
